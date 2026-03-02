@@ -1,0 +1,64 @@
+# ==========================================
+# INDEPENDENT TWO-SAMPLE T-TEST
+# ==========================================
+
+import numpy as np
+from scipy import stats
+
+# Sample Size
+N = 10
+
+# Gaussian distributed data
+# x → mean = 2, variance = 1
+x = np.random.randn(N) + 2
+
+# y → mean = 0, variance = 1
+y = np.random.randn(N)
+
+# ------------------------------------------
+# 1️⃣ Calculate Sample Variance
+# ------------------------------------------
+var_x = x.var(ddof=1)   # sample variance
+var_y = y.var(ddof=1)
+
+# ------------------------------------------
+# 2️⃣ Pooled Standard Deviation
+# ------------------------------------------
+SD = np.sqrt((var_x + var_y) / 2)
+
+print("Standard Deviation =", SD)
+
+# ------------------------------------------
+# 3️⃣ Manual T-Statistic Calculation
+# ------------------------------------------
+tval = (x.mean() - y.mean()) / (SD * np.sqrt(2 / N))
+
+# Degrees of freedom
+dof = 2 * N - 2
+
+# Two-tailed p-value (corrected)
+pval = 2 * (1 - stats.t.cdf(abs(tval), df=dof))
+
+print("\nManual Calculation")
+print("t =", tval)
+print("p =", pval)
+
+# ------------------------------------------
+# 4️⃣ Cross Check Using SciPy
+# ------------------------------------------
+tval2, pval2 = stats.ttest_ind(x, y)
+
+print("\nUsing SciPy Function")
+print("t =", tval2)
+print("p =", pval2)
+
+OUTPUT:
+Standard Deviation = 1.261151364757808
+
+Manual Calculation
+t = 3.1704371429909712
+p = 0.005295466985760555
+
+Using SciPy Function
+t = 3.1704371429909712
+p = 0.005295466985760556
